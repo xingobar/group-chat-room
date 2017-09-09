@@ -1,14 +1,11 @@
 <?php
-
 namespace App;
-
-use Illuminate\Notifications\Notifiable;
+use App\Group;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -17,7 +14,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password',
     ];
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -26,7 +22,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
     public function groups()
     {
         return $this->belongsToMany(Group::class)->withTimestamps();

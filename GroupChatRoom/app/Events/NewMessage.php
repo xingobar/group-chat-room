@@ -1,21 +1,17 @@
 <?php
-
 namespace App\Events;
-
 use App\Conversation;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-
-class NewMessage implements  ShouldBroadcast
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+class NewMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    private $conversation ;
+    public $conversation;
     /**
      * Create a new event instance.
      *
@@ -25,26 +21,26 @@ class NewMessage implements  ShouldBroadcast
     {
         $this->conversation = $conversation;
     }
-
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
+    //監聽這個頻道
     public function broadcastOn()
     {
-        return new PrivateChannel('group.' . $this->conversation->group()->id);
+        return new PrivateChannel('groups.' . $this->conversation->group->id);
     }
 
+    // 要送出去的資料
     public function broadcastWith()
     {
         return [
-            'message'=>$this->conversation->message,
-            'user'=>[
-                'id'=>$this->conversation->user()->id,
-                'name'=>$this->conversation->user()->name,
+            'message' => $this->conversation->message,
+            'user' => [
+                'id' => $this->conversation->user->id,
+                'name' => $this->conversation->user->name,
             ]
         ];
     }
-
 }

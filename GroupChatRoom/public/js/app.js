@@ -921,9 +921,9 @@ window._ = __webpack_require__(12);
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(14);
+    window.$ = window.jQuery = __webpack_require__(14);
 
-  __webpack_require__(15);
+    __webpack_require__(15);
 } catch (e) {}
 
 /**
@@ -933,8 +933,10 @@ try {
  */
 
 window.axios = __webpack_require__(16);
-
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common = {
+    'X-CSRF-TOKEN': window.Laravel.csrfToken,
+    'X-Requested-With': 'XMLHttpRequest'
+};
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
@@ -945,9 +947,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**
@@ -957,14 +959,13 @@ if (token) {
  */
 
 
-
 window.Pusher = __webpack_require__(37);
 
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default.a({
-  broadcaster: 'pusher',
-  key: 'cb11096e067dac73cc84',
-  cluster: 'ap2',
-  encrypted: false
+    broadcaster: 'pusher',
+    key: 'cb11096e067dac73cc84',
+    cluster: 'ap2',
+    encrypted: true
 });
 
 /***/ }),
@@ -46895,11 +46896,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.groups.push(e.group);
             });
         }
-    },
-    beforeDestory: function beforeDestory() {
-        // [銷毀事件]
-        // 在組件銷毀前清除 groupCreated 所有監聽
-        Bus.$off('groupCreated');
     }
 });
 
@@ -46908,7 +46904,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('dv', _vm._l((_vm.groups), function(group) {
+  return _c('div', _vm._l((_vm.groups), function(group) {
     return _c('group-chat', {
       key: group.id,
       attrs: {
@@ -46994,8 +46990,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['initialUsers'],
@@ -47030,7 +47024,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel panel-default"
   }, [_c('div', {
     staticClass: "panel-heading"
-  }, [_vm._v("\n        Create Group\n    ")]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Create Group")]), _vm._v(" "), _c('div', {
     staticClass: "panel-body"
   }, [_c('form', [_c('div', {
     staticClass: "form-group"
@@ -47095,7 +47089,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": function($event) {
         $event.preventDefault();
-        _vm.createGroup()
+        _vm.createGroup($event)
       }
     }
   }, [_vm._v("Create Group")])])])
@@ -47195,7 +47189,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['group'],
@@ -47208,7 +47201,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     mounted: function mounted() {
-        this.listenForNewGroups();
+        this.listenForNewMessage();
     },
 
 
@@ -47216,7 +47209,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         store: function store() {
             var _this = this;
 
-            axios.post('/conversations', { message: this.message, group_id: this.group_id }).then(function (response) {
+            axios.post('/conversations', { message: this.message, group_id: this.group.id }).then(function (response) {
                 _this.message = '';
                 _this.conversations.push(response.data);
             });
@@ -47245,14 +47238,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('span', {
     staticClass: "glyphicon glyphicon-comment"
-  }), _vm._v(_vm._s(_vm.group.name) + "\n            "), _c('div', {
+  }), _vm._v(" " + _vm._s(_vm.group.name) + "\n            "), _c('div', {
     staticClass: "btn-group pull-right"
   }, [_c('a', {
     staticClass: "btn btn-default btn-xs",
     attrs: {
       "type": "button",
       "data-toggle": "collapse",
-      "data-parent": "#accordion",
+      "data-parent": "#accordion-",
       "href": '#collapseOne-' + _vm.group.id
     }
   }, [_c('span', {
@@ -47274,7 +47267,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_c('strong', {
       staticClass: "primary-font"
     }, [_vm._v(_vm._s(conversation.user.name))])]), _vm._v(" "), _c('p', [_vm._v("\n                                " + _vm._s(conversation.message) + "\n                            ")])])])
-  }))])]), _vm._v(" "), _c('div', {
+  }))]), _vm._v(" "), _c('div', {
     staticClass: "panel-footer"
   }, [_c('div', {
     staticClass: "input-group"
@@ -47289,7 +47282,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "btn-input",
       "type": "text",
-      "placeholder": "Type your message here ",
+      "placeholder": "Type your message here...",
       "autofocus": ""
     },
     domProps: {
@@ -47318,7 +47311,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.store()
       }
     }
-  }, [_vm._v("Send")])])])])])])
+  }, [_vm._v("\n                            Send")])])])])])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

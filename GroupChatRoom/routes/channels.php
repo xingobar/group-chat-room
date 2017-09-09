@@ -1,5 +1,5 @@
 <?php
-
+use App\Group;
 /*
 |--------------------------------------------------------------------------
 | Broadcast Channels
@@ -10,7 +10,6 @@
 | used to check if an authenticated user can listen to the channel.
 |
 */
-
 /*
  * we are listening on private channel, we need to authenticate that the currently logged
  * in user is able to listen on this private channel. Laravel Echo will automatically call
@@ -22,6 +21,6 @@ Broadcast::channel('users.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('group.{group}',function($user,Group $group){
-   return $group->hasUser($user->id);
+Broadcast::channel('groups.{group}', function ($user, Group $group) {
+    return $group->hasUser($user->id);
 });

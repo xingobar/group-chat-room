@@ -1,11 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\User;
 use App\Group;
-
+use App\User;
+use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     /**
@@ -17,7 +14,6 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
-
     /**
      * Show the application dashboard.
      *
@@ -25,13 +21,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $groups = Auth::user()->groups();
-        $users = User::where('id','<>',Auth::user()->id)->get();
-        $user = Auth::user();
-        return view('home',[
-            'groups'=>$groups,
-            'users'=>$users,
-            'user'=>$user
-        ]);
+        $groups = auth()->user()->groups;
+        $users = User::where('id', '<>', auth()->user()->id)->get();
+        $user = auth()->user();
+        return view('home', ['groups' => $groups, 'users' => $users, 'user' => $user]);
     }
 }

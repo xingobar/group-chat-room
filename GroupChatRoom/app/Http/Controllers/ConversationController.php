@@ -1,23 +1,18 @@
 <?php
-
 namespace App\Http\Controllers;
-
+use App\Conversation;
 use App\Events\NewMessage;
 use Illuminate\Http\Request;
-use App\Conversation;
-
 class ConversationController extends Controller
 {
-    public function store(Request $request)
+    public function store()
     {
         $conversation = Conversation::create([
-            'message' => $request->input('message'),
-            'group_id'=>$request->input('group_id'),
-            'user_id'=>$request->input('user_id')
+            'message' => request('message'),
+            'group_id' => request('group_id'),
+            'user_id' => auth()->user()->id,
         ]);
-
         broadcast(new NewMessage($conversation))->toOthers();
-
         return $conversation->load('user');
     }
 }

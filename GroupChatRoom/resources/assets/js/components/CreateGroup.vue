@@ -1,47 +1,45 @@
 <template>
     <div class="panel panel-default">
-        <div class="panel-heading">
-            Create Group
-        </div>
+        <div class="panel-heading">Create Group</div>
         <div class="panel-body">
             <form>
                 <div class="form-group">
-                    <input  class="form-control" type="text" v-model="name" placeholder="Group Name"/>
+                    <input class="form-control" type="text" v-model="name" placeholder="Group Name">
                 </div>
                 <div class="form-group">
                     <select v-model="users" multiple id="friends">
                         <option v-for="user in initialUsers" :value="user.id">
-                            {{user.name}}
+                            {{ user.name }}
                         </option>
                     </select>
                 </div>
             </form>
         </div>
         <div class="panel-footer text-center">
-            <button type="submit" @click.prevent="createGroup()" class="btn btn-primary">Create Group</button>
+            <button type="submit" @click.prevent="createGroup" class="btn btn-primary">Create Group</button>
         </div>
     </div>
 </template>
 
 <script>
-    export default{
-        props:['initialUsers'],
+    export default {
+        props: ['initialUsers'],
 
-        data(){
-            return{
-                name:'',
-                users:[]
+        data() {
+            return {
+                name: '',
+                users: []
             }
         },
 
-        methods:{
-            createGroup(){
-                axios.post('/groups',{name:this.name,users:this.users})
-                    .then((response => {
+        methods: {
+            createGroup() {
+                axios.post('/groups', {name: this.name, users: this.users})
+                    .then((response) => {
                         this.name = '';
                         this.users = [];
-                        Bus.$emit('groupCreated',response.data)
-                    }));
+                        Bus.$emit('groupCreated', response.data);
+                    });
             }
         }
     }
