@@ -12,7 +12,7 @@ class ConversationController extends Controller
             'group_id' => request('group_id'),
             'user_id' => auth()->user()->id,
         ]);
-        broadcast(new NewMessage($conversation))->toOthers();
+        broadcast(new NewMessage($conversation))->toOthers(); // 廣播 new message 這個事件
         return $conversation->load('user');
     }
 }
