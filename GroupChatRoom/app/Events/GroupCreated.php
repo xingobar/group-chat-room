@@ -36,6 +36,7 @@ class GroupCreated implements  ShouldBroadcast
     {
         $channels = [];
 
+        // broadcast only to those user who are present in the group
         foreach ($this->group->users() as $user)
         {
             array_push($channels,new PrivateChannel('users.'.$user->id));
