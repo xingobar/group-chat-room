@@ -1,5 +1,7 @@
 <template>
-    <group-chat v-for="group in groups" :group="group" :key="group.id"></group-chat>
+     <dv>
+         <group-chat v-for="group in groups" :group="group" :key="group.id"></group-chat>
+     </dv>
 </template>
 
 <script>
